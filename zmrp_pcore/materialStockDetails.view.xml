@@ -1,0 +1,220 @@
+<core:View 
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:l="sap.ui.layout"
+	xmlns:c="sap.suite.ui.commons"
+	xmlns:viz="sap.viz.ui5.controls"
+	xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+	xmlns:viz.data="sap.viz.ui5.data"
+	xmlns="sap.m"
+	controllerName="zmrp_pcore.materialStockDetails" 
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page 
+		title="Details for Materials"
+		showNavButton="true"
+		navButtonPress="onBack">
+		<content>
+		<l:ResponsiveSplitter defaultPane="default">
+		<l:PaneContainer>
+			<l:SplitPane 
+				requiredParentWidth="400" 
+				id="default"
+				height="100%">
+				<Panel 
+					class="panelListDetails"
+					headerText="Materials"
+					height="100%">
+					<Toolbar>
+						<SearchField width="100%" />
+					</Toolbar>
+					 <content 
+					 	height="100%">
+					<List 
+						items="{detailProduct>/ProductCollection}">
+						<StandardListItem 
+							title="{detailProduct>Name}" 
+							counter="{detailProduct>Quantity}"
+							height="100%"/>
+					</List>
+				</content>
+				</Panel>
+			</l:SplitPane>
+			<l:PaneContainer orientation="Vertical">
+							<l:SplitPane  requiredParentWidth="800">
+								<l:VerticalLayout width="100%">
+								<ObjectHeader
+					
+					title="Some Title"
+					number="some"
+					numberUnit="text1" >
+					<statuses>
+						<ObjectStatus
+							text="Some Damaged"
+								state="Error" />
+							<ObjectStatus
+								text="In Stock"
+								state="Success" />
+							</statuses>
+							<attributes>
+							<ObjectAttribute text="text2" />
+							<ObjectAttribute text="text3" />
+							<ObjectAttribute text="text4" />
+							<ObjectAttribute
+								text="www.sap.com"
+								active="true"
+								press="handleLinkObjectAttributePress" />
+							</attributes>
+			</ObjectHeader>
+					
+					<IconTabBar
+					id="idIconTabBar"
+					select="handleIconTabBarSelect"
+					class="sapUiResponsiveContentPadding">
+					<items>
+						<IconTabFilter
+						icon="sap-icon://alert"
+						iconColor="sap.ui.core.IconColor.Neutral"
+						text="Stock Details">
+						<content>
+							<l:FixFlex id='chartFixFlex' minFlexSize="250">
+							<l:flexContent>
+							<c:ChartContainer
+								id="chartContainer"
+								showFullScreen="true"
+								showPersonalization="false"
+								autoAdjustHeight="true"
+								showLegend="true"
+								personalizationPress="attachPersonalizationPress"
+								contentChange="attachContentChange"
+								title="Revenue">
+								<c:content>
+								<c:ChartContainerContent
+								icon = "sap-icon://line-chart"
+								title = "Line Chart">
+								<c:content>						
+										<viz:Popover id="idPopOver">
+										</viz:Popover>
+										<viz:VizFrame id="idVizFrame" 
+
+										height='100%' width="100%" vizType='horizontal_waterfall'>
+										<viz:dataset>
+										<viz.data:FlattenedDataset
+										data="{chartStock>/Rowsets/Rowset/0/Row}">
+										<viz.data:dimensions>
+										<viz.data:DimensionDefinition name="Type" value="{chartStock>Type}" />
+										<viz.data:DimensionDefinition name="Status" value="{chartStock>Status}" />
+										</viz.data:dimensions>
+										<viz.data:measures>
+										<viz.data:MeasureDefinition name="Hours" value="{chartStock>Hours}" />
+										</viz.data:measures>
+										</viz.data:FlattenedDataset>
+										</viz:dataset>
+										<viz:feeds>
+										<viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Hours" />
+										<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Status" />
+										<viz.feeds:FeedItem uid="waterfallType" type="Dimension" values="Type" />
+										</viz:feeds>
+										</viz:VizFrame>
+								</c:content>
+									</c:ChartContainerContent>
+
+									<c:ChartContainerContent
+								icon = "sap-icon://table-chart"
+								title = "Details Chart">
+								<c:content>						
+										<Table
+									inset="false"
+									mode="MultiSelect"
+									items="{product>/ProductCollection}">
+									<columns>
+										<Column width="12em">
+											<header>
+												<Text text="Product" />
+											</header>
+										</Column>
+										<Column
+											minScreenWidth="Tablet"
+											demandPopin="true" >
+											<header>
+												<Text text="Supplier" />
+											</header>
+										</Column>
+										<Column
+											minScreenWidth="Tablet"
+											demandPopin="true"
+											hAlign="Right">
+											<header>
+												<Text text="Dimensions" />
+											</header>
+										</Column>
+										<Column
+											minScreenWidth="Tablet"
+											demandPopin="true"
+											hAlign="Center">
+											<header>
+												<Text text="Weight" />
+											</header>
+										</Column>
+										<Column hAlign="Right">
+											<header>
+												<Text text="Product" />
+											</header>
+										</Column>
+									</columns>
+									<items>
+										<ColumnListItem>
+											<cells>
+												<ObjectIdentifier
+													title="{product>Name}"
+													text="{product>ProductId}"/>
+												<Text
+													text="{product>SupplierName}" />
+												<Text
+													text="{product>Width} x {product>Depth} x {product>Height} {product>DimUnit}" />
+												<ObjectNumber
+													number="{product>WeightMeasure}"
+													unit="{product>WeightUnit}"
+													state="{
+														parts: [
+															{path: 'product>WeightMeasure'},
+															{path: 'product>WeightUnit'}
+														],
+														formatter: 'sap.m.sample.Table.Formatter.weightState'
+													}" />
+												
+													<FlexBox height="70px" width="170px">
+														<core:Icon
+															src="sap-icon://up"
+															class="size4"
+															color="#1C4C98" >
+															<core:layoutData>
+																<FlexItemData growFactor="1" />
+															</core:layoutData>
+														</core:Icon>
+													</FlexBox>
+													</cells>
+										</ColumnListItem>
+									</items>	
+									</Table>
+								</c:content>
+									</c:ChartContainerContent>
+
+								</c:content>
+							</c:ChartContainer>
+							</l:flexContent>
+							</l:FixFlex>
+						</content>	
+					</IconTabFilter>
+
+					
+					
+					</items>
+					</IconTabBar>
+				</l:VerticalLayout>
+				</l:SplitPane>
+			</l:PaneContainer>
+		</l:PaneContainer>
+	</l:ResponsiveSplitter>
+		</content>
+	</Page>
+</core:View>

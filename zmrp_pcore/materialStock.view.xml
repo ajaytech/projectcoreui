@@ -1,0 +1,162 @@
+<core:View 
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:l="sap.ui.layout"
+	xmlns:micro="sap.suite.ui.microchart"
+	xmlns:fb="sap.ui.comp.filterbar"
+	xmlns="sap.m"
+	controllerName="zmrp_pcore.materialStock" 
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page title="Home Project CORE"
+		showNavButton="true"
+		navButtonPress="onBack">
+		<content>
+		<ObjectHeader
+		
+		title="Material Stock"
+		number="4">
+		<statuses>
+			<ObjectStatus
+				text="MATERIALS"
+				state="Error" />
+		</statuses>
+		</ObjectHeader>
+		<l:VerticalLayout width="100%">
+			<fb:FilterBar 
+				header="Search"
+				reset="onReset" 
+				search="onSearch" 
+				showRestoreButton="true" 
+				showClearButton="true">
+
+		<fb:filterItems>
+		<fb:FilterItem name="Product" label="Filer by Product">
+			<fb:control>
+				<Input type="Text" change="onChange"/>
+			</fb:control>				
+		</fb:FilterItem>
+
+		</fb:filterItems>
+		<fb:filterItems>
+				<fb:FilterItem name="date" label="Fileter by Delivery Date">
+					<fb:control>
+						<DatePicker/>
+					</fb:control>				
+				</fb:FilterItem>
+		</fb:filterItems>
+		<fb:filterItems>
+		<fb:FilterItem name="B" label="Region" labelTooltip="Filet by Region" mandatory="true">
+					<fb:control>
+						
+						<ComboBox type="Text" change="onChange" label="Filer by Product">
+						     <items>
+						        <core:Item key="001" text="EMEA"/>
+						        <core:Item key="002" text="America"/>
+						        <core:Item key="003" text="APJ"/>
+						     </items>
+						</ComboBox>						
+					</fb:control>				
+				</fb:FilterItem>				
+			</fb:filterItems>
+			
+			 </fb:FilterBar>	
+				</l:VerticalLayout>	
+				<ColumnListItem>
+			<cells>
+				<ObjectIdentifier
+					title="{Name}"
+					text="{ProductId}" />
+				<Text text="{SupplierName}" />
+				<Text text="{Width} x {Depth} x {Height} {DimUnit}" />
+				<ObjectNumber
+					number="{WeightMeasure}"
+					unit="{WeightUnit}"
+					state="{
+						path: 'WeightMeasure',
+						formatter: 'sap.m.sample.TableSelectDialog.Formatter.weightState'
+					}" />
+				<ObjectNumber
+						number="{
+							parts:[{path:'Price'},{path:'CurrencyCode'}],
+							type: 'sap.ui.model.type.Currency',
+							formatOptions: {showMeasure: false}
+						}"
+						unit="{CurrencyCode}" />
+			</cells>
+		</ColumnListItem>
+		<Table id="idProductsTable"
+		inset="false"
+		mode="MultiSelect"
+		items="{product>/ProductCollection}">
+		<columns>
+			<Column width="12em">
+				<header>
+					<Text text="Product" />
+				</header>
+			</Column>
+			<Column
+				minScreenWidth="Tablet"
+				demandPopin="true" >
+				<header>
+					<Text text="Supplier" />
+				</header>
+			</Column>
+			<Column
+				minScreenWidth="Tablet"
+				demandPopin="true"
+				hAlign="Right">
+				<header>
+					<Text text="Dimensions" />
+				</header>
+			</Column>
+			<Column
+				minScreenWidth="Tablet"
+				demandPopin="true"
+				hAlign="Center">
+				<header>
+					<Text text="Weight" />
+				</header>
+			</Column>
+			<Column hAlign="Right">
+				<header>
+					<Text text="Product" />
+				</header>
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem>
+				<cells>
+					<ObjectIdentifier
+						title="{product>Name}"
+						text="{product>ProductId}"/>
+					<Text
+						text="{product>SupplierName}" />
+					<Text
+						text="{product>Width} x {product>Depth} x {product>Height} {product>DimUnit}" />
+					<ObjectNumber
+						number="{product>WeightMeasure}"
+						unit="{product>WeightUnit}"
+						state="{
+							parts: [
+								{path: 'product>WeightMeasure'},
+								{path: 'product>WeightUnit'}
+							],
+							formatter: 'sap.m.sample.Table.Formatter.weightState'
+						}" />
+					
+						<FlexBox height="70px" width="170px">
+							<micro:ColumnMicroChart isResponsive="true">
+								<micro:columns>
+									<micro:ColumnMicroChartData value="5" color="Error"/>
+									<micro:ColumnMicroChartData value="13" color="Error"/>
+									<micro:ColumnMicroChartData value="9" />
+								</micro:columns>
+							</micro:ColumnMicroChart>
+						</FlexBox>
+						</cells>
+			</ColumnListItem>
+		</items>	
+		</Table>
+		</content>
+	</Page>
+</core:View>
